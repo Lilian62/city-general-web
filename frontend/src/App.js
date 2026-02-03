@@ -11,7 +11,7 @@ function App() {
         <Route path="/" element={<CategoryPage />} />
         
         {/* You can rename '/admin' to something secret here if you wish */}
-        <Route path="/city-hq-portal-2026" element={<AdminDashboard />} />
+        <Route path="/city-hq-portal-2026" element={<Dashboard />} />
         
         <Route path="/product/:slug" element={<ProductDetail />} />
 

@@ -8,7 +8,7 @@ const productRoutes = require('./routes/productRoutes');
 const app = express();
 
 // 1. Middlewares
-app.use(cors()); 
+app.use(cors({ origin: '*' })); // For staging, allowing all is easiest to start
 app.use(express.json());
 
 // 2. Database Connection
