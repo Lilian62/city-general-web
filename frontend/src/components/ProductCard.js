@@ -1,10 +1,14 @@
-import React from 'react'; // Removed useState since it's no longer used for expansion
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
-  // Snippet logic
+  // DYNAMIC URL LOGIC: Switches between localhost and live server
+  const API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000' 
+    : 'https://your-backend-service-name.onrender.com'; // Replace with your Render URL later
+
   const descriptionSnippet = product.description 
     ? product.description.slice(0, 80) + "..." 
     : "No description provided.";
@@ -22,24 +26,26 @@ const ProductCard = ({ product }) => {
         display: 'flex',
         flexDirection: 'column',
         transition: 'all 0.3s ease',
-        height: '100%' 
+        height: '100%',
+        position: 'relative'
       }}
       onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
       onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
     >
-      {/* Image Container */}
+      {/* Image Container using Dynamic URL */}
       <div style={{ height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '15px', overflow: 'hidden' }}>
         <img 
-          src={`http://localhost:5000${product.imageUrl}`} 
+          src={`${API_BASE_URL}${product.imageUrl}`} 
           alt={`${product.name} - City General Electric`} 
           loading="lazy"
           style={{ 
             maxWidth: '100%', 
             maxHeight: '100%', 
             borderRadius: '8px', 
-            objectFit: 'contain',
-            transition: 'transform 0.5s ease'
+            objectFit: 'contain'
           }} 
+          // Fallback image if the path is broken
+          onError={(e) => { e.target.src = 'https://via.placeholder.com/220?text=Image+Not+Found'; }}
         />
       </div>
 
@@ -56,10 +62,8 @@ const ProductCard = ({ product }) => {
         {product.name}
       </h3>
       
-      {/* Navigation Trigger (Replaces old expansion logic) */}
       <div 
-        // This checks if a slug exists; if not, it uses the ID as a backup
-onClick={() => navigate(`/product/${product.slug || product._id}`)}
+        onClick={() => navigate(`/product/${product.slug || product._id}`)}
         style={{ 
           cursor: 'pointer',
           padding: '12px',
@@ -67,8 +71,13 @@ onClick={() => navigate(`/product/${product.slug || product._id}`)}
           backgroundColor: '#fafafa',
           transition: 'all 0.3s ease',
           flexGrow: 1, 
-          border: '1px solid transparent'
+          border: '1px solid transparent',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between'
         }}
+        onMouseEnter={(e) => e.currentTarget.style.borderColor = '#003366'}
+        onMouseLeave={(e) => e.currentTarget.style.borderColor = 'transparent'}
       >
         <p style={{ 
           fontSize: '0.9rem', 
@@ -83,12 +92,11 @@ onClick={() => navigate(`/product/${product.slug || product._id}`)}
         
         <span style={{ 
           fontSize: '0.75rem', 
-          color: '#3498db', 
+          color: '#003366', 
           display: 'block', 
           marginTop: '8px',
           fontWeight: 'bold',
-          textTransform: 'uppercase',
-          letterSpacing: '0.5px'
+          textTransform: 'uppercase'
         }}>
           View Details →
         </span>

@@ -53,7 +53,7 @@ const Navbar = () => {
     transition: 'background 0.2s'
   };
 
-  const categories = ["Category 1", "Category 2", "Category 3", "Category 4", "Category 5"];
+  const categories = ["Low voltage", "Instruments and Meters", "Solar Panels", "Generators", "Our Field work"];
 
   return (
     <nav style={navStyle}>

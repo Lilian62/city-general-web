@@ -12,12 +12,12 @@ const AdminDashboard = () => {
   const [heroFile, setHeroFile] = useState(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('Category 1');
+  const [category, setCategory] = useState('Low voltage');
   const [image, setImage] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
 
-  const categories = ["Category 1", "Category 2", "Category 3", "Category 4", "Category 5"];
+  const categories = ["Low voltage", "Instruments and Meters", "Solar Panels", "Generators", "Our Field work"];
 
   const createSlug = (text) => {
     return text.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');  
@@ -139,13 +139,6 @@ const AdminDashboard = () => {
             >
               {showPassword ? "🙈" : "👁️"}
             </span>
-          </div>
-
-          <div 
-            onClick={() => alert("To reset password: Change ADMIN_PASSWORD in backend/.env and restart server.")}
-            style={{ color: '#3498db', fontSize: '0.8rem', cursor: 'pointer', marginBottom: '20px', textAlign: 'right', textDecoration: 'underline' }}
-          >
-            Forgot Password?
           </div>
 
           <button 
