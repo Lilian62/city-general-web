@@ -18,9 +18,7 @@ const AdminDashboard = () => {
   const [filterCategory, setFilterCategory] = useState('All');
 
   // --- 1. DYNAMIC URL LOGIC (The Fix) ---
-  const API_BASE_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:5000' 
-    : 'https://city-general-web-backend.onrender.com';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const categories = ["Low voltage", "Instruments and Meters", "Solar Panels", "Generators", "Our Field work"];
 

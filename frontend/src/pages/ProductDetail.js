@@ -15,12 +15,12 @@ const ProductDetail = () => {
   const fetchProduct = async () => {
     try {
       // Try fetching by slug first, then try ID if that fails
-      const res = await axios.get(`http://localhost:5000/api/products/slug/${slug}`);
+      const res = await axios.get(`${API_BASE_URL}/api/products/slug/${slug}`);
       setProduct(res.data);
     } catch (err) {
       // Fallback: Try fetching by ID for older products
       try {
-        const fallbackRes = await axios.get(`http://localhost:5000/api/products/${slug}`);
+        const fallbackRes = await axios.get(`${API_BASE_URL}/api/products/${slug}`);
         setProduct(fallbackRes.data);
       } catch (fallbackErr) {
         console.error("Product not found by slug or ID");
@@ -43,7 +43,7 @@ const ProductDetail = () => {
         {/* Left: Professional Image View */}
         <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img 
-            src={`http://localhost:5000${product.imageUrl}`} 
+            src={`${API_BASE_URL}${product.imageUrl}`} 
             alt={product.name} 
             style={{ width: '100%', maxHeight: '450px', objectFit: 'contain' }} 
           />
@@ -76,7 +76,7 @@ const ProductDetail = () => {
               boxShadow: '0 4px 12px rgba(37, 211, 102, 0.3)'
             }}
           >
-            Order via WhatsApp
+            Order via whatsapp
           </a>
         </div>
       </div>

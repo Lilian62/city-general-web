@@ -15,9 +15,7 @@ const CategoryPage = () => {
   });
 
   // Updated to use dynamic URL logic for production compatibility
-  const API_BASE_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:5000' 
-    : 'https://your-backend-service-name.onrender.com';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const categories = ["Low voltage", "Instruments and Meters", "Solar Panels", "Generators", "Our Field work"];
 

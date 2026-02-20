@@ -5,9 +5,7 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
   // DYNAMIC URL LOGIC: Switches between localhost and live server
-  const API_BASE_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:5000' 
-    : 'https://city-general-web-backend.onrender.com'; // Replace with your Render URL later
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const descriptionSnippet = product.description 
     ? product.description.slice(0, 80) + "..." 
