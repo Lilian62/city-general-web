@@ -4,7 +4,7 @@ import axios from 'axios';
 const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // NEW: State for visibility toggle
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   
@@ -17,6 +17,11 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
 
+  // --- 1. DYNAMIC URL LOGIC (The Fix) ---
+  const API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000' 
+    : 'https://city-general-web-backend.onrender.com';
+
   const categories = ["Low voltage", "Instruments and Meters", "Solar Panels", "Generators", "Our Field work"];
 
   const createSlug = (text) => {
@@ -27,7 +32,8 @@ const AdminDashboard = () => {
     if (e) e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/products/login', { password });
+      // UPDATED URL
+      const response = await axios.post(`${API_BASE_URL}/api/products/login`, { password });
       if (response.data.success) {
         setIsAuthenticated(true);
       }
@@ -40,12 +46,13 @@ const AdminDashboard = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const pRes = await axios.get('http://localhost:5000/api/products');
-      const sRes = await axios.get('http://localhost:5000/api/products/settings');
+      // UPDATED URLs
+      const pRes = await axios.get(`${API_BASE_URL}/api/products`);
+      const sRes = await axios.get(`${API_BASE_URL}/api/products/settings`);
       setProducts(pRes.data);
       if (sRes.data) setWelcomeText(sRes.data.welcomeText || "");
     } catch (err) { console.error("Error fetching data", err); }
-  }, []);
+  }, [API_BASE_URL]);
 
   useEffect(() => {
     if (isAuthenticated) fetchData();
@@ -58,7 +65,8 @@ const AdminDashboard = () => {
     formData.append('welcomeText', welcomeText);
     if (heroFile) formData.append('heroElement', heroFile);
     try {
-      await axios.post('http://localhost:5000/api/products/settings', formData);
+      // UPDATED URL
+      await axios.post(`${API_BASE_URL}/api/products/settings`, formData);
       alert("Hero Section Updated!");
     } catch (err) { alert("Failed to update Hero"); }
     finally { setLoading(false); }
@@ -75,7 +83,8 @@ const AdminDashboard = () => {
     formData.append('category', category);
     formData.append('image', image);
     try {
-      await axios.post('http://localhost:5000/api/products', formData);
+      // UPDATED URL
+      await axios.post(`${API_BASE_URL}/api/products`, formData);
       alert("Product Added!");
       setName(''); setDescription(''); setImage(null); 
       fetchData(); 
@@ -86,7 +95,8 @@ const AdminDashboard = () => {
   const deleteProduct = async (id) => {
     if (window.confirm("Delete this product?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/products/${id}`);
+        // UPDATED URL
+        await axios.delete(`${API_BASE_URL}/api/products/${id}`);
         fetchData(); 
       } catch (err) { alert("Delete failed."); }
     }
@@ -111,13 +121,13 @@ const AdminDashboard = () => {
           {/* PASSWORD INPUT WITH TOGGLE */}
           <div style={{ position: 'relative', marginBottom: '10px' }}>
             <input 
-              type={showPassword ? "text" : "password"} // Switches type
+              type={showPassword ? "text" : "password"} 
               autoFocus 
               onChange={(e) => setPassword(e.target.value)} 
               placeholder="Enter Password" 
               style={{ 
                 width: '100%', 
-                padding: '12px 45px 12px 12px', // Space for icon on the right
+                padding: '12px 45px 12px 12px', 
                 borderRadius: '8px', 
                 border: '1px solid #ddd', 
                 boxSizing: 'border-box', 
@@ -218,7 +228,8 @@ const AdminDashboard = () => {
               {filteredProducts.map(p => (
                 <tr key={p._id} style={{ borderBottom: '1px solid #f1f1f1' }}>
                   <td style={{ padding: '15px' }}>
-                    <img src={`http://localhost:5000${p.imageUrl}`} width="60" height="60" style={{ objectFit: 'contain', borderRadius: '5px', border: '1px solid #eee' }} alt="" />
+                    {/* UPDATED IMAGE URL */}
+                    <img src={`${API_BASE_URL}${p.imageUrl}`} width="60" height="60" style={{ objectFit: 'contain', borderRadius: '5px', border: '1px solid #eee' }} alt="" />
                   </td>
                   <td style={{ padding: '15px' }}>
                     <div style={{ fontWeight: 'bold', color: '#2c3e50' }}>{p.name}</div>
