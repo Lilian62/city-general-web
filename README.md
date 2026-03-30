@@ -9,8 +9,7 @@ A full-stack MERN (MongoDB, Express, React, Node.js) web application designed fo
 * **Dynamic Hero Section:** Supports high-quality background images or videos managed via the admin panel.
 * **Categorized Catalog:** Products are automatically grouped into specific electrical categories.
 * **Interactive Product Cards:** "Read More" functionality for descriptions to keep the UI clean.
-* **WhatsApp Integration:** A floating enquiry button that links directly to `+254 796 988 033`.
-
+* **WhatsApp Integration:** A floating enquiry button that links directly to whatsapp
 ### Admin Side
 
 * **Secure Login:** Password-protected portal with a modern, centered UI.
