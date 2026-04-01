@@ -28,7 +28,7 @@ app.use(cors({
 }));
 
 // Handle preflight OPTIONS requests for all routes
-app.options('*', cors());
+app.options('(.*)', cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // needed for form data
