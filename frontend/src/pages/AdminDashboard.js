@@ -17,8 +17,7 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
 
-  // --- 1. DYNAMIC URL LOGIC (The Fix) ---
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const categories = ["Low voltage", "Instruments and Meters", "Solar Panels", "Generators", "Our Field work"];
 
@@ -30,7 +29,6 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     if (e) e.preventDefault();
     setLoading(true);
     try {
-      // UPDATED URL
       const response = await axios.post(`${API_BASE_URL}/api/products/login`, { password });
       if (response.data.success) {
         setIsAuthenticated(true);
@@ -44,7 +42,6 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const fetchData = useCallback(async () => {
     try {
-      // UPDATED URLs
       const pRes = await axios.get(`${API_BASE_URL}/api/products`);
       const sRes = await axios.get(`${API_BASE_URL}/api/products/settings`);
       setProducts(pRes.data);
@@ -63,7 +60,6 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     formData.append('welcomeText', welcomeText);
     if (heroFile) formData.append('heroElement', heroFile);
     try {
-      // UPDATED URL
       await axios.post(`${API_BASE_URL}/api/products/settings`, formData);
       alert("Hero Section Updated!");
     } catch (err) { alert("Failed to update Hero"); }
@@ -81,7 +77,6 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     formData.append('category', category);
     formData.append('image', image);
     try {
-      // UPDATED URL
       await axios.post(`${API_BASE_URL}/api/products`, formData);
       alert("Product Added!");
       setName(''); setDescription(''); setImage(null); 
@@ -93,7 +88,6 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
   const deleteProduct = async (id) => {
     if (window.confirm("Delete this product?")) {
       try {
-        // UPDATED URL
         await axios.delete(`${API_BASE_URL}/api/products/${id}`);
         fetchData(); 
       } catch (err) { alert("Delete failed."); }
@@ -107,7 +101,27 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     return matchesSearch && matchesCategory;
   });
 
-  // --- LOGIN UI WITH TOGGLE ---
+  // --- SVG ICONS ---
+  const EyeIcon = () => (
+    <svg width="22" height="22" viewBox="0 0 76 56" fill="none"
+      stroke="#3498db" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 28 Q18 6 38 6 Q58 6 72 28 Q58 50 38 50 Q18 50 4 28Z"/>
+      <circle cx="38" cy="28" r="10"/>
+      <circle cx="38" cy="28" r="3.5" fill="#3498db" stroke="none"/>
+    </svg>
+  );
+
+  const EyeOffIcon = () => (
+    <svg width="22" height="22" viewBox="0 0 76 56" fill="none"
+      stroke="#555" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 28 Q18 6 38 6 Q58 6 72 28"/>
+      <path d="M72 28 Q58 50 38 50 Q18 50 4 28"/>
+      <circle cx="38" cy="28" r="10"/>
+      <line x1="62" y1="6" x2="14" y2="52" strokeWidth="2.5"/>
+    </svg>
+  );
+
+  // --- LOGIN UI ---
   if (!isAuthenticated) {
     return (
       <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)', fontFamily: 'sans-serif' }}>
@@ -116,7 +130,7 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
           <h2 style={{ color: '#333', marginBottom: '5px' }}>Admin Login</h2>
           <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '25px' }}>City General Appliances Portal</p>
           
-          {/* PASSWORD INPUT WITH TOGGLE */}
+          {/* PASSWORD INPUT WITH SVG TOGGLE */}
           <div style={{ position: 'relative', marginBottom: '10px' }}>
             <input 
               type={showPassword ? "text" : "password"} 
@@ -141,11 +155,12 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
                 top: '50%', 
                 transform: 'translateY(-50%)', 
                 cursor: 'pointer',
-                fontSize: '1.2rem',
-                userSelect: 'none'
+                userSelect: 'none',
+                display: 'flex',
+                alignItems: 'center'
               }}
             >
-              {showPassword ? "🙈" : "👁️"}
+              {showPassword ? <EyeOffIcon /> : <EyeIcon />}
             </span>
           </div>
 
@@ -189,13 +204,13 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
               {categories.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
             <div style={{ flex: 1 }}>
-                <label style={{ fontSize: '0.8rem', display: 'block', color: '#666' }}>Product Image:</label>
-                <input type="file" onChange={(e)=>setImage(e.target.files[0])} />
+              <label style={{ fontSize: '0.8rem', display: 'block', color: '#666' }}>Product Image:</label>
+              <input type="file" onChange={(e)=>setImage(e.target.files[0])} />
             </div>
           </div>
           <textarea placeholder="Detailed product description..." value={description} onChange={(e)=>setDescription(e.target.value)} style={{ height: '100px', padding: '12px', borderRadius: '5px', border: '1px solid #ddd', fontFamily: 'inherit' }} />
           <button onClick={handleUploadProduct} disabled={loading} style={{ background: '#27ae60', color: 'white', padding: '14px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '1rem', fontWeight: 'bold' }}>
-            {loading ? "Processing..." : " Upload Product to Inventory"}
+            {loading ? "Processing..." : "Upload Product to Inventory"}
           </button>
         </div>
       </section>
@@ -226,7 +241,6 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
               {filteredProducts.map(p => (
                 <tr key={p._id} style={{ borderBottom: '1px solid #f1f1f1' }}>
                   <td style={{ padding: '15px' }}>
-                    {/* UPDATED IMAGE URL */}
                     <img src={`${API_BASE_URL}${p.imageUrl}`} width="60" height="60" style={{ objectFit: 'contain', borderRadius: '5px', border: '1px solid #eee' }} alt="" />
                   </td>
                   <td style={{ padding: '15px' }}>
@@ -247,4 +261,4 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
   );
 };
 
-export default AdminDashboard;
+export default AdminDashboard
