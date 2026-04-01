@@ -2,31 +2,21 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-const cors = require('cors');
 const productRoutes = require('./routes/productRoutes');
 
 const app = express();
 
-// 1. CORS Middleware
-const allowedOrigins = [
-  'https://city-general-web-frontend.onrender.com',
-  'http://localhost:3000',
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-}));
-
-// NO app.options() line — removed entirely
+// 1. CORS - Manual headers (most reliable, no library issues)
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://city-general-web-frontend.onrender.com');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -35,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 const mongoUri = process.env.MONGO_URI;
 
 if (!mongoUri) {
-  console.error('❌ MONGO_URI is not defined.');
+  console.error('❌ MONGO_URI is not defined. Add it in Render Environment tab.');
   process.exit(1);
 }
 
@@ -55,7 +45,7 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // 5. Health check
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK' });
+  res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
 
 // 6. Global error handler
