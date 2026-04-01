@@ -96,7 +96,7 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
           fontWeight: 'bold',
           textTransform: 'uppercase'
         }}>
-          View Details →
+          View Details 
         </span>
       </div>
     </div>
