@@ -157,4 +157,3 @@ To make your images permanent on a live site, you have two choices:
 
 * **Option A:** Use **Cloudinary** (Recommended). It’s a free service that stores your images and gives you a permanent URL to save in MongoDB.
 * **Option B:** Use a "Persistent Disk" on Render (this usually costs a few dollars per month).
-
